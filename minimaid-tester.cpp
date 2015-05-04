@@ -50,15 +50,22 @@ int main() {
     unsigned long long all_off = 0x0;
     unsigned long long data = 0x0;
 
-    for (int i = 0; i < 4; i++) {
-        data = 0x0;
-        data |= (1 << i);
-        data = data << (3 * 8);
-        std::cout << data << std::endl;
-        std::cout << "Writing 1 << " << i << std::endl;
-        if (!write_data(pHandle, data))
-            std::cout << "ERROR: Unable to write data...";
-        usleep(1000000);
+    for (int f = 1; f < 5; f++) {
+        for (int i = 0; i < 8; i++) {
+            // Reset our data
+            data = 0x0;
+            data |= (1 << i);
+            data = data << (f * 8);
+
+            if (!write_data(pHandle, data))
+                std::cout << "ERROR: Unable to write data...";
+            usleep(1000000);
+
+            if (i == 7)
+                i = 0;
+        }
+        if (f == 4)
+            f = 1;
     }
 
     write_data(pHandle, all_off);
